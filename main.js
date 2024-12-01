@@ -1,54 +1,39 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as dat from "dat.gui";
 
 const scene = new THREE.Scene();
-
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
-  0.1,
+  0.9,
   200
 );
-camera.position.set(0, 10, 20);
-
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+const controls = new OrbitControls(camera, renderer.domElement);
+const gui = new dat.GUI();
+
+camera.position.set(120, 40, 0);
+controls.enableDamping = true;
 document.body.style.margin = 0;
 document.body.appendChild(renderer.domElement);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-const textureLoader = new THREE.TextureLoader();
-const floorTexture = textureLoader.load("./textures/snow.jpg");
-floorTexture.wrapS = THREE.RepeatWrapping;
-floorTexture.wrapT = THREE.RepeatWrapping;
-floorTexture.repeat.set(4, 4);
+// Ambient light
+const ambitionLight = new THREE.AmbientLight(0xb9d5ff, 0.2);
+scene.add(ambitionLight);
 
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(200, 200),
-  new THREE.MeshStandardMaterial({
-    map: floorTexture,
-    color: 0xffffff,
-  })
-);
-floor.rotation.x = -Math.PI / 2;
-floor.receiveShadow = true;
-scene.add(floor);
+// Directional light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(-10, 20, 10);
+scene.add(directionalLight);
 
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(10, 20, 10);
-light.castShadow = true;
-scene.add(light);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
-const tick = () => {
+function animate() {
+  requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
-  requestAnimationFrame(tick);
-};
-tick();
+}
+animate();
 
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
