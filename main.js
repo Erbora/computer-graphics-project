@@ -18,6 +18,29 @@ controls.enableDamping = true;
 document.body.style.margin = 0;
 document.body.appendChild(renderer.domElement);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+gui.width = 300;
+
+const doorTexture = textureLoader.load("./textures/door/color.jpg");
+const doorAlphaTexture = textureLoader.load("./textures/door/alpha.jpg");
+const doorNormalTexture = textureLoader.load("./textures/door/normal.jpg");
+
+const bricksTexture = textureLoader.load("./textures/bricks/yellow.webp");
+const bricksNormalTexture = textureLoader.load("./textures/bricks/yellow.webp");
+
+const roofTexture = textureLoader.load("./textures/bricks/roof.jpg");
+const roofNormalTexture = textureLoader.load("./textures/bricks/roof.jpg");
+
+const floorTexture = textureLoader.load("./textures/floor/snow.jpg");
+const floorNormalTexture = textureLoader.load("./textures/floor/snow.jpg");
+
+floorTexture.repeat.set(4, 4);
+floorNormalTexture.repeat.set(4, 4);
+floorTexture.wrapS = THREE.RepeatWrapping;
+floorTexture.wrapT = THREE.RepeatWrapping;
+floorNormalTexture.wrapS = THREE.RepeatWrapping;
+floorNormalTexture.wrapT = THREE.RepeatWrapping;
 
 // Ambient light
 const ambitionLight = new THREE.AmbientLight(0xb9d5ff, 0.2);
