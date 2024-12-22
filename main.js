@@ -54,6 +54,13 @@ directionalLight.position.set(-10, 20, 10);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
+directionalLight.shadow.mapSize.width = 2048;
+directionalLight.shadow.mapSize.height = 2048;
+directionalLight.shadow.camera.left = -50;
+directionalLight.shadow.camera.right = 50;
+directionalLight.shadow.camera.top = 50;
+directionalLight.shadow.camera.bottom = -50;
+
 // Ground
 const groundTexture = textureLoader.load("./textures/floor/snow.jpg");
 groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
