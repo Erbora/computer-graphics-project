@@ -200,10 +200,53 @@ function animateParticles() {
   particlesGeometry.attributes.position.needsUpdate = true;
 }
 
+const snowflakeCount = 5000; 
+const snowGeometry = new THREE.BufferGeometry();
+const snowMaterial = new THREE.PointsMaterial({
+  color: 0xffffff, 
+  size: 0.2, 
+  transparent: true,
+  opacity: 0.8, 
+});
+
+
+const snowPositions = new Float32Array(snowflakeCount * 3);
+
+for (let i = 0; i < snowflakeCount; i++) {
+  snowPositions[i * 3 + 0] = Math.random() * 400 - 200; // x
+  snowPositions[i * 3 + 1] = Math.random() * 500 - 250; // y
+  snowPositions[i * 3 + 2] = Math.random() * 400 - 200; // z
+}
+
+snowGeometry.setAttribute(
+  "position",
+  new THREE.BufferAttribute(snowPositions, 3)
+);
+
+const snow = new THREE.Points(snowGeometry, snowMaterial);
+scene.add(snow);
+
+// Snow animation
+function animateSnow() {
+  const positions = snowGeometry.attributes.position.array;
+
+  for (let i = 0; i < snowflakeCount; i++) {
+    positions[i * 3 + 1] -= 0.2; 
+    if (positions[i * 3 + 1] < -250) {
+      positions[i * 3 + 1] = 250; 
+    }
+    positions[i * 3 + 0] += Math.random() * 0.2 - 0.1; 
+    positions[i * 3 + 2] += Math.random() * 0.2 - 0.1; 
+  }
+
+  snowGeometry.attributes.position.needsUpdate = true; 
+}
+
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
   animateParticles();
+  animateSnow();
   renderer.render(scene, camera);
 }
 animate();
