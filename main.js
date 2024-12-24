@@ -12,11 +12,20 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   200
 );
+
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
+
+// HDR environment map
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load("hdri/puresky_4k.hdr", function (texture) {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = texture;
+  scene.environment = texture;
+});
 
 // Controls
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -26,7 +35,6 @@ camera.position.set(120, 40, 120);
 // Loaders
 const textureLoader = new THREE.TextureLoader();
 const gltfLoader = new GLTFLoader();
-const rgbeLoader = new RGBELoader();
 
 // GUI Debugging
 const gui = new dat.GUI();
@@ -36,13 +44,6 @@ gui.width = 300;
 const gridHelper = new THREE.GridHelper(100, 50);
 scene.add(gridHelper);
 gui.add(gridHelper, "visible").name("Toggle Grid");
-
-// Environment Mapping
-rgbeLoader.load("hdri/puresky_4k.hdr", (texture) => {
-  texture.mapping = THREE.EquirectangularReflectionMapping;
-  scene.background = texture;
-  scene.environment = texture;
-});
 
 // Lighting
 const ambientLight = new THREE.AmbientLight(0xb9d5ff, 0.2);
@@ -207,53 +208,10 @@ function animateParticles() {
   particlesGeometry.attributes.position.needsUpdate = true;
 }
 
-const snowflakeCount = 5000; 
-const snowGeometry = new THREE.BufferGeometry();
-const snowMaterial = new THREE.PointsMaterial({
-  color: 0xffffff, 
-  size: 0.2, 
-  transparent: true,
-  opacity: 0.8, 
-});
-
-
-const snowPositions = new Float32Array(snowflakeCount * 3);
-
-for (let i = 0; i < snowflakeCount; i++) {
-  snowPositions[i * 3 + 0] = Math.random() * 400 - 200; // x
-  snowPositions[i * 3 + 1] = Math.random() * 500 - 250; // y
-  snowPositions[i * 3 + 2] = Math.random() * 400 - 200; // z
-}
-
-snowGeometry.setAttribute(
-  "position",
-  new THREE.BufferAttribute(snowPositions, 3)
-);
-
-const snow = new THREE.Points(snowGeometry, snowMaterial);
-scene.add(snow);
-
-// Snow animation
-function animateSnow() {
-  const positions = snowGeometry.attributes.position.array;
-
-  for (let i = 0; i < snowflakeCount; i++) {
-    positions[i * 3 + 1] -= 0.2; 
-    if (positions[i * 3 + 1] < -250) {
-      positions[i * 3 + 1] = 250; 
-    }
-    positions[i * 3 + 0] += Math.random() * 0.2 - 0.1; 
-    positions[i * 3 + 2] += Math.random() * 0.2 - 0.1; 
-  }
-
-  snowGeometry.attributes.position.needsUpdate = true; 
-}
-
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
   animateParticles();
-  animateSnow();
   renderer.render(scene, camera);
 }
 animate();
