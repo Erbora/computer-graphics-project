@@ -193,7 +193,7 @@ particlesGeometry.setAttribute(
 
 const particlesMaterial = new THREE.PointsMaterial({
   color: 0xaaaaaa,
-  size: 0.1,
+  size: 0.5, // Increased size to make the snow particles larger
 });
 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 scene.add(particles);
