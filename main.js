@@ -63,19 +63,26 @@ directionalLight.shadow.camera.top = 50;
 directionalLight.shadow.camera.bottom = -50;
 
 // Ground
-const groundTexture = textureLoader.load("./textures/floor/snow.jpg");
-groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-groundTexture.repeat.set(10, 10);
+const floorTexture = textureLoader.load("./textures/floor/snow.jpg");
+const floorNormalTexture = textureLoader.load("./textures/floor/snow.jpg");
 
-const ground = new THREE.Mesh(
+floorTexture.repeat.set(4, 4);
+floorNormalTexture.repeat.set(4, 4);
+floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+floorNormalTexture.wrapS = floorNormalTexture.wrapT = THREE.RepeatWrapping;
+
+const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(300, 300),
   new THREE.MeshStandardMaterial({
-    map: groundTexture,
+    color: 0xffffff,
+    map: floorTexture,
+    normalMap: floorNormalTexture,
+    side: THREE.DoubleSide,
   })
 );
-ground.rotation.x = -Math.PI / 2;
-ground.receiveShadow = true;
-scene.add(ground);
+floor.rotation.x = Math.PI * -0.5;
+floor.receiveShadow = true;
+scene.add(floor);
 
 // House Creation
 function createHouse(position) {
