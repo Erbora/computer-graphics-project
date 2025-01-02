@@ -130,7 +130,8 @@ const houseSpacing = 50;
 for (let i = -2; i <= 2; i++) {
   createHouse({ x: i * houseSpacing, z: 0 });
 }
-
+loadModel("models/house1.glb", { x: 70, y: 0, z: 55 }, 3, { x: 0, y: -Math.PI / 2, z: 0 });
+loadModel("models/house2.glb", { x: -80, y: 0, z: 60 }, 40, { x: 0, y: Math.PI, z: 0 });
 // Roads
 function createRoad(position, width, length, texturePath) {
   const roadTexture = textureLoader.load(texturePath);
