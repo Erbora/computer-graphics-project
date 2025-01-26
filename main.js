@@ -111,7 +111,7 @@ scene.add(house);
 house.position.y = 0;
 
 const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(300, 300),
+  new THREE.PlaneGeometry(400, 400),
   new THREE.MeshStandardMaterial({
     color: 0xffffff,
     map: floorTexture,
@@ -789,6 +789,98 @@ loader.load(
     });
 
     scene.add(lunapark);
+  },
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+  },
+  function (error) {
+    console.log("An error happened");
+  }
+);
+
+loader.load(
+  "models/football_field.glb",
+  function (gltf) {
+    const football_field = gltf.scene;
+
+    // Compute bounding box for proper placement
+    const boundingBox = new THREE.Box3().setFromObject(football_field);
+
+    // Adjust scale and position
+    football_field.scale.set(1.5, 1.5, 1.5);
+    football_field.position.set(-30, 0, -150); // Ensure it rests on the plane
+
+    football_field.rotation.set(0, 2 * Math.PI, 0);
+
+    // Enable shadow casting
+    football_field.traverse(function (node) {
+      if (node.isMesh) {
+        node.castShadow = true;
+      }
+    });
+
+    scene.add(football_field);
+  },
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+  },
+  function (error) {
+    console.log("An error happened");
+  }
+);
+loader.load(
+  "models/player1.glb",
+  function (gltf) {
+    const player1 = gltf.scene;
+
+    // Compute bounding box for proper placement
+    const boundingBox = new THREE.Box3().setFromObject(player1);
+
+    // Adjust scale and position
+    player1.scale.set(0.1, 0.1, 0.1);
+    player1.position.set(-30, 3, -120); // Ensure it rests on the plane
+
+    player1.rotation.set(0, 2 * Math.PI, 0);
+
+    // Enable shadow casting
+    player1.traverse(function (node) {
+      if (node.isMesh) {
+        node.castShadow = true;
+      }
+    });
+
+    scene.add(player1);
+  },
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+  },
+  function (error) {
+    console.log("An error happened");
+  }
+);
+
+loader.load(
+  "models/player2.glb",
+  function (gltf) {
+    const player2 = gltf.scene;
+
+    // Compute bounding box for proper placement
+    const boundingBox = new THREE.Box3().setFromObject(player2);
+
+    // Adjust scale and position
+    player2.scale.set(0.1, 0.1, 0.1);
+    player2.position.set(10, 3, -120); // Ensure it rests on the plane
+
+    player2.rotation.set(0, 2 * Math.PI, 0);
+
+    // Enable shadow casting
+    player2.traverse(function (node) {
+      if (node.isMesh) {
+        node.castShadow = true;
+      }
+    });
+
+    scene.add(player2);
   },
   function (xhr) {
     console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
