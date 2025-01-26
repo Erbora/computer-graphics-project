@@ -766,3 +766,34 @@ loader.load(
     console.error("An error occurred while loading the house model:", error);
   }
 );
+
+loader.load(
+  "models/lunapark.glb",
+  function (gltf) {
+    const lunapark = gltf.scene;
+
+    // Compute bounding box for proper placement
+    const boundingBox = new THREE.Box3().setFromObject(lunapark);
+
+    // Adjust scale and position
+    lunapark.scale.set(0.7, 0.7, 0.7);
+    lunapark.position.set(80, 0, -100); // Ensure it rests on the plane
+
+    lunapark.rotation.set(0, 2 * Math.PI, 0);
+
+    // Enable shadow casting
+    lunapark.traverse(function (node) {
+      if (node.isMesh) {
+        node.castShadow = true;
+      }
+    });
+
+    scene.add(lunapark);
+  },
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+  },
+  function (error) {
+    console.log("An error happened");
+  }
+);
