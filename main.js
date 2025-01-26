@@ -710,3 +710,59 @@ loader.load(
     console.log("An error happened");
   }
 );
+
+loader.load(
+  "models/house3.glb",
+  function (gltf) {
+    const house3Model = gltf.scene;
+
+    // Scale and position the model
+    house3Model.scale.set(3, 3, 3); // Adjust the scale to match other houses if necessary
+    house3Model.position.set(10, 2, 80); // Place in front of the existing houses along the z-axis
+    house3Model.rotation.set(0, 2 * Math.PI, 0); // Rotate 360 degrees along y-axis
+
+    // Shadow casting for the house model and its children
+    house3Model.traverse(function (node) {
+      if (node.isMesh) {
+        node.castShadow = true;
+      }
+    });
+
+    // Add the house model to the scene
+    scene.add(house3Model);
+  },
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+  },
+  function (error) {
+    console.log("An error happened");
+  }
+);
+
+loader.load(
+  "models/house5.glb",
+  function (gltf) {
+    const house3Model = gltf.scene;
+
+    house3Model.scale.set(4, 4, 4); // Adjust the scale as necessary
+
+    house3Model.position.set(-30, 0.1, 80);
+
+    house3Model.rotation.set(0, -7.9, 0); // Adjust rotation as needed to face the road
+
+    house3Model.traverse(function (node) {
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+
+    scene.add(house3Model);
+  },
+  function (xhr) {
+    console.log(`House model ${(xhr.loaded / xhr.total) * 100}% loaded`);
+  },
+  function (error) {
+    console.error("An error occurred while loading the house model:", error);
+  }
+);
