@@ -169,7 +169,7 @@ function createHouse(position) {
   const loader = new GLTFLoader();
 
   loader.load(
-    "models/window.glb", // Replace with the actual path to your .glb file
+    "models/window.glb", 
     (gltf) => {
       const windowModel = gltf.scene;
 
@@ -567,23 +567,19 @@ loader.load(
     scene.add(movingCar);
 
     // Animation variables for the moving car
-    let carSpeed = 0.5;
-    let maxPosition = 70; // Set the maximum distance the car will travel on the road
-    let minPosition = -70; // Set the minimum distance (back direction)
+  let carSpeed = 0.5;
+  let maxPosition = 70; // Maximum distance the car will travel on the road
+  let minPosition = -70; // Starting position
 
-    // Update moving car movement in the animation loop
-    function animateMovingCar() {
-      movingCar.position.x += carSpeed;
+  // Update moving car movement in the animation loop
+  function animateMovingCar() {
+    movingCar.position.x += carSpeed;
 
-      // Reverse direction when the car reaches the limits
-      if (
-        movingCar.position.x >= maxPosition ||
-        movingCar.position.x <= minPosition
-      ) {
-        carSpeed *= -1; // Reverse the speed
-        movingCar.rotation.y = Math.PI / 2; // Rotate 90 degrees to face along the road
-      }
+    // Reset car to start when it reaches the end
+    if (movingCar.position.x >= maxPosition) {
+      movingCar.position.x = minPosition;
     }
+  }
 
     // Add moving car animation to the main animation loop
     const tick = () => {
