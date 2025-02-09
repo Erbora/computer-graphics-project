@@ -885,3 +885,30 @@ loader.load(
     console.log("An error happened");
   }
 );
+
+// Load the walking person model
+loader.load(
+  "models/person.glb", // Replace with the actual path to your person model
+  function (gltf) {
+    const person = gltf.scene;
+
+    // Set initial scale and position
+    person.scale.set(0.1, 0.1, 0.1); // Adjust based on model size
+    person.position.set(50, 0, 50); // Start position on the road or sidewalk
+
+    // Enable shadow casting
+    person.traverse(function (node) {
+      if (node.isMesh) {
+        node.castShadow = true;
+      }
+    });
+
+    scene.add(person);
+  },
+  function (xhr) {
+    console.log(`Person model ${(xhr.loaded / xhr.total) * 100}% loaded`);
+  },
+  function (error) {
+    console.error("Error loading person model:", error);
+  }
+);
