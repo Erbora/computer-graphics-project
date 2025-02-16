@@ -25,18 +25,18 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 gui.width = 300;
 
-const doorTexture = textureLoader.load("./textures/door/color.jpg");
-const doorAlphaTexture = textureLoader.load("./textures/door/alpha.jpg");
-const doorNormalTexture = textureLoader.load("./textures/door/normal.jpg");
+const doorTexture = textureLoader.load("/textures/door/color.jpg");
+const doorAlphaTexture = textureLoader.load("/textures/door/alpha.jpg");
+const doorNormalTexture = textureLoader.load("/textures/door/normal.jpg");
 
-const bricksTexture = textureLoader.load("./textures/bricks/yellow.webp");
-const bricksNormalTexture = textureLoader.load("./textures/bricks/yellow.webp");
+const bricksTexture = textureLoader.load("/textures/bricks/yellow.webp");
+const bricksNormalTexture = textureLoader.load("/textures/bricks/yellow.webp");
 
-const roofTexture = textureLoader.load("./textures/bricks/roof.jpg");
-const roofNormalTexture = textureLoader.load("./textures/bricks/roof.jpg");
+const roofTexture = textureLoader.load("/textures/bricks/roof.jpg");
+const roofNormalTexture = textureLoader.load("/textures/bricks/roof.jpg");
 
-const floorTexture = textureLoader.load("./textures/floor/snow.jpg");
-const floorNormalTexture = textureLoader.load("./textures/floor/snow.jpg");
+const floorTexture = textureLoader.load("/textures/floor/snow.jpg");
+const floorNormalTexture = textureLoader.load("/textures/floor/snow.jpg");
 
 floorTexture.repeat.set(4, 4);
 floorNormalTexture.repeat.set(4, 4);
@@ -60,12 +60,12 @@ gui
   .name("Ambient Light");
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(-10, 20, 10); //Position the light to the left, above, and in front of the house
+directionalLight.position.set(-10, 20, 10);
 directionalLight.castShadow = true;
-directionalLight.intensity = 0.5; //Increase and decrease the light intensity
+directionalLight.intensity = 0.5;
 scene.add(directionalLight);
 
-directionalLight.target.position.set(0, 0, 0); //Target the center of the house
+directionalLight.target.position.set(0, 0, 0);
 scene.add(directionalLight.target);
 
 directionalLight.shadow.camera.left = -30;
@@ -76,7 +76,7 @@ directionalLight.shadow.camera.near = 0.1;
 directionalLight.shadow.camera.far = 100;
 
 //Shadow map size for better quality
-directionalLight.shadow.mapSize.width = 2048; //Higher values give better shadow quality
+directionalLight.shadow.mapSize.width = 2048;
 directionalLight.shadow.mapSize.height = 2048;
 
 //Update light and shadow properties
@@ -91,18 +91,18 @@ rgbeLoader.load("hdri/puresky_4k.hdr", function (texture) {
 });
 
 // Road Geometry
-const roadTexture = textureLoader.load("./textures/floor/asphalt.jpg"); // Use the new road texture
+const roadTexture = textureLoader.load("/textures/floor/asphalt.jpg");
 roadTexture.wrapS = THREE.RepeatWrapping;
 roadTexture.wrapT = THREE.RepeatWrapping;
 
-const roadGeometry = new THREE.PlaneGeometry(200, 20); // Wider road with length 200 and width 20
+const roadGeometry = new THREE.PlaneGeometry(200, 20);
 const roadMaterial = new THREE.MeshStandardMaterial({
   map: roadTexture,
   side: THREE.DoubleSide,
 });
 const road = new THREE.Mesh(roadGeometry, roadMaterial);
-road.rotation.x = -Math.PI / 2; // Lay flat on the ground
-road.position.set(0, 0.1, 40); // Position road in front of the houses, nearer to the camera
+road.rotation.x = -Math.PI / 2;
+road.position.set(0, 0.1, 40);
 
 scene.add(road);
 
@@ -169,31 +169,27 @@ function createHouse(position) {
   const loader = new GLTFLoader();
 
   loader.load(
-    "models/window.glb", 
+    "//models/window.glb",
     (gltf) => {
       const windowModel = gltf.scene;
 
-      // Scale the window model down to make it fit the house proportionally
-      windowModel.scale.set(0.1, 0.1, 0.1); // Reduce size to one-tenth of the original
+      windowModel.scale.set(0.1, 0.1, 0.1);
 
-      // Set appropriate position for the left window
       windowModel.position.set(
         -wallWidth / 4,
         wallHeight / 2,
         wallWidth / 2 + 0.5
-      ); // Move window closer to the camera by increasing z value
+      );
       windowModel.castShadow = true;
 
-      // Add the left window to the house group
       houseGroup.add(windowModel.clone());
 
-      // Create and add the right window
       const rightWindowModel = windowModel.clone();
       rightWindowModel.position.set(
         wallWidth / 4,
         wallHeight / 2,
         wallWidth / 2 + 0.5
-      ); // Move window closer to the camera by increasing z value
+      );
       houseGroup.add(rightWindowModel);
     },
     undefined,
@@ -213,21 +209,20 @@ for (let i = -houseCount; i <= houseCount; i++) {
   createHouse({ x: i * houseSpacing, y: 0, z: 0 });
 }
 // Back Road Geometry
-const backRoadTexture = textureLoader.load("./textures/floor/highway.jpg");
+const backRoadTexture = textureLoader.load("/textures/floor/highway.jpg");
 backRoadTexture.wrapS = THREE.RepeatWrapping;
 backRoadTexture.wrapT = THREE.RepeatWrapping;
-backRoadTexture.repeat.set(2, 5); // Adjust the texture scaling if needed
-backRoadTexture.rotation = Math.PI / 2; // Rotate the texture 90 degrees to make it vertical
-
-const backRoadGeometry = new THREE.PlaneGeometry(200, 40); // Length and width of the road
+backRoadTexture.repeat.set(2, 5);
+backRoadTexture.rotation = Math.PI / 2;
+const backRoadGeometry = new THREE.PlaneGeometry(200, 40);
 const backRoadMaterial = new THREE.MeshStandardMaterial({
   map: backRoadTexture,
   side: THREE.DoubleSide,
 });
 
 const backRoad = new THREE.Mesh(backRoadGeometry, backRoadMaterial);
-backRoad.rotation.x = -Math.PI / 2; // Lay flat on the ground
-backRoad.position.set(0, 0.1, -50); // Position road behind the yellow houses
+backRoad.rotation.x = -Math.PI / 2;
+backRoad.position.set(0, 0.1, -50);
 scene.add(backRoad);
 
 function animate() {
@@ -243,25 +238,22 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Resize handling
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-//Size of the wall
 const wallWidth = 19;
 const wallHeight = 12;
 
 const frontWallGeometry = new THREE.PlaneGeometry(wallWidth, wallHeight);
 
-//Interior and exterior textures for the front wall
 const frontWallExteriorTexture = textureLoader.load(
-  "./textures/bricks/yellow.webp"
+  "/textures/bricks/yellow.webp"
 );
 const frontWallInteriorTexture = textureLoader.load(
-  "./textures/floor/interior.jpg"
+  "/textures/floor/interior.jpg"
 );
 
 const frontWallExteriorMaterial = new THREE.MeshStandardMaterial({
@@ -274,7 +266,6 @@ const frontWallInteriorMaterial = new THREE.MeshStandardMaterial({
   side: THREE.BackSide, //Interior side
 });
 
-//Front Wall Exterior Plane
 const frontWallExterior = new THREE.Mesh(
   frontWallGeometry,
   frontWallExteriorMaterial
@@ -294,15 +285,12 @@ const wallMaterial = new THREE.MeshStandardMaterial({
 
 const textureLoad = new THREE.TextureLoader();
 
-textureLoad.load("./textures/bricks/yellow.webp", function (texture) {
-  // Set the wrapping to clamp to edge to avoid repetition
+textureLoad.load("/textures/bricks/yellow.webp", function (texture) {
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
 
-  // Set the minification filter to avoid mipmap generation
   texture.minFilter = THREE.LinearFilter;
 
-  // Use a standard material with the texture
   const backWallTextureMaterial = new THREE.MeshStandardMaterial({
     map: texture,
   });
@@ -316,7 +304,6 @@ textureLoad.load("./textures/bricks/yellow.webp", function (texture) {
   wallShape.lineTo(wallWidth / 2, 0);
   wallShape.lineTo(-wallWidth / 2, 0);
 
-  //Function to add a window hole to the wall shape
   function addWindowHole(shape, x, y, width, height) {
     const holePath = new THREE.Path();
     holePath.moveTo(x - width / 2, y);
@@ -327,18 +314,15 @@ textureLoad.load("./textures/bricks/yellow.webp", function (texture) {
     shape.holes.push(holePath);
   }
 
-  //Dimensions and positions for the windows
   const windowWidth = 3;
   const windowHeight = 2.8;
-  const leftWindowX = -6; //Left window position
-  const rightWindowX = 5; //Right window position
-  const windowY = 7; //Vertical position
+  const leftWindowX = -6;
+  const rightWindowX = 5;
+  const windowY = 7;
 
-  //Window holes to the wall shape
   addWindowHole(wallShape, leftWindowX, windowY, windowWidth, windowHeight);
   addWindowHole(wallShape, rightWindowX, windowY, windowWidth, windowHeight);
 
-  //Geometry from the shape
   const backWallGeometry = new THREE.ShapeGeometry(wallShape);
   backWallGeometry.computeBoundingBox();
   const max = backWallGeometry.boundingBox.max;
@@ -352,14 +336,13 @@ textureLoad.load("./textures/bricks/yellow.webp", function (texture) {
   }
   const baseh = 0;
   const backWall = new THREE.Mesh(backWallGeometry, backWallTextureMaterial);
-  backWall.position.set(0, baseh, wallDepth); // Adjust position as necessary
+  backWall.position.set(0, baseh, wallDepth);
   house.add(backWall);
 });
 
 const sideWallLength = 15;
 const leftWallGeometry = new THREE.PlaneGeometry(sideWallLength, wallHeight);
 
-//Left Wall Exterior Plane
 const leftWallExterior = new THREE.Mesh(
   leftWallGeometry,
   frontWallExteriorMaterial
@@ -370,10 +353,8 @@ leftWallExterior.rotation.y = -Math.PI / 2;
 house.add(leftWallExterior);
 leftWallExterior.castShadow = true;
 
-//Right Wall Geometry
 const rightWallGeometry = new THREE.PlaneGeometry(sideWallLength, wallHeight);
 
-// Right Wall Exterior Plane
 const rightWallExterior = new THREE.Mesh(
   rightWallGeometry,
   frontWallExteriorMaterial
@@ -401,7 +382,6 @@ roof.castShadow = true;
 const door = new THREE.Mesh(
   new THREE.PlaneGeometry(6, 6, 10, 10),
   new THREE.MeshStandardMaterial({
-    // color: '#00ff00'
     roughness: 0.1,
     map: doorTexture,
     alphaMap: doorAlphaTexture,
@@ -415,7 +395,7 @@ door.position.y = door.geometry.parameters.height * 0.5 - 0.1;
 house.add(door);
 
 const textureLoader1 = new THREE.TextureLoader();
-const platformTexture = textureLoader.load("./textures/bricks/tiles.jpg");
+const platformTexture = textureLoader.load("/textures/bricks/tiles.jpg");
 
 platformTexture.wrapS = THREE.RepeatWrapping;
 platformTexture.wrapT = THREE.RepeatWrapping;
@@ -443,11 +423,9 @@ const rainMaterial = new THREE.PointsMaterial({
   transparent: true,
 });
 
-//Array to store positions of each raindrop
 const positions = new Float32Array(raindropCount * 3);
 
 for (let i = 0; i < raindropCount; i++) {
-  //Positions
   positions[i * 3 + 0] = Math.random() * 400 - 200; // x
   positions[i * 3 + 1] = Math.random() * 500 - 250; // y
   positions[i * 3 + 2] = Math.random() * 400 - 200; // z
@@ -455,21 +433,18 @@ for (let i = 0; i < raindropCount; i++) {
 
 rainGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
-// Snowflake particle count
-const snowflakeCount = 5000; // Adjust for density
+const snowflakeCount = 5000;
 const snowGeometry = new THREE.BufferGeometry();
 const snowMaterial = new THREE.PointsMaterial({
-  color: 0xffffff, // Snow is white
-  size: 0.2, // Larger size for snowflakes
+  color: 0xffffff,
+  size: 0.2,
   transparent: true,
-  opacity: 0.8, // Slightly transparent for a soft look
+  opacity: 0.8,
 });
 
-// Array to store positions of each snowflake
 const snowPositions = new Float32Array(snowflakeCount * 3);
 
 for (let i = 0; i < snowflakeCount; i++) {
-  // Initial positions for snowflakes
   snowPositions[i * 3 + 0] = Math.random() * 400 - 200; // x
   snowPositions[i * 3 + 1] = Math.random() * 500 - 250; // y
   snowPositions[i * 3 + 2] = Math.random() * 400 - 200; // z
@@ -480,29 +455,24 @@ snowGeometry.setAttribute(
   new THREE.BufferAttribute(snowPositions, 3)
 );
 
-// Create the particle system
 const snow = new THREE.Points(snowGeometry, snowMaterial);
 scene.add(snow);
 
-// Snow animation
 const animateSnow = () => {
   const positions = snowGeometry.attributes.position.array;
 
   for (let i = 0; i < snowflakeCount; i++) {
-    // Vertical movement
-    positions[i * 3 + 1] -= 0.2; // Slow fall speed
+    positions[i * 3 + 1] -= 0.2;
 
-    // Reset snowflake to the top when it falls out of view
     if (positions[i * 3 + 1] < -250) {
       positions[i * 3 + 1] = 250;
     }
 
-    // Add slight horizontal drift
-    positions[i * 3 + 0] += Math.random() * 0.2 - 0.1; // Drift in x
-    positions[i * 3 + 2] += Math.random() * 0.2 - 0.1; // Drift in z
+    positions[i * 3 + 0] += Math.random() * 0.2 - 0.1;
+    positions[i * 3 + 2] += Math.random() * 0.2 - 0.1;
   }
 
-  snowGeometry.attributes.position.needsUpdate = true; // Mark the geometry for an update
+  snowGeometry.attributes.position.needsUpdate = true;
 };
 
 const tick = () => {
@@ -524,14 +494,12 @@ window.addEventListener("resize", () => {
 
 const loader = new GLTFLoader();
 loader.load(
-  "models/porsche.glb",
+  "//models/porsche.glb",
   function (gltf) {
     const carModel = gltf.scene;
-    //Scale & position the model as before
     carModel.scale.set(3.5, 3.5, 3.5);
     carModel.position.set(-15, 2.5, 0);
 
-    //Shadow casting for the car model and its children
     carModel.traverse(function (node) {
       if (node.isMesh) {
         node.castShadow = true;
@@ -547,17 +515,14 @@ loader.load(
   }
 );
 
-// Load another car model for moving along the road
 loader.load(
-  "models/untitled.glb", // Assuming you have another car model or using the same one
+  "/models/untitled.glb",
   function (gltf) {
     const movingCar = gltf.scene;
-    // Scale & position the model
     movingCar.scale.set(3.5, 3.5, 3.5);
-    movingCar.position.set(-70, 0.2, 40); // Start on the road, near one end
-    movingCar.rotation.y = Math.PI / 2; // Rotate 90 degrees to face along the road
+    movingCar.position.set(-70, 0.2, 40);
+    movingCar.rotation.y = Math.PI / 2;
 
-    // Shadow casting for the car model and its children
     movingCar.traverse(function (node) {
       if (node.isMesh) {
         node.castShadow = true;
@@ -566,29 +531,23 @@ loader.load(
 
     scene.add(movingCar);
 
-    // Animation variables for the moving car
-  let carSpeed = 0.5;
-  let maxPosition = 70; // Maximum distance the car will travel on the road
-  let minPosition = -70; // Starting position
+    let carSpeed = 0.5;
+    let maxPosition = 70;
+    let minPosition = -70;
 
-  // Update moving car movement in the animation loop
-  function animateMovingCar() {
-    movingCar.position.x += carSpeed;
+    function animateMovingCar() {
+      movingCar.position.x += carSpeed;
 
-    // Reset car to start when it reaches the end
-    if (movingCar.position.x >= maxPosition) {
-      movingCar.position.x = minPosition;
+      if (movingCar.position.x >= maxPosition) {
+        movingCar.position.x = minPosition;
+      }
     }
-  }
 
-    // Add moving car animation to the main animation loop
     const tick = () => {
       requestAnimationFrame(tick);
 
-      // Update car animation
       animateMovingCar();
 
-      // Update snow animation
       animateSnow();
 
       controls.update();
@@ -604,10 +563,9 @@ loader.load(
   }
 );
 
-// Function to load and position trees
 function loadTree(position, scale) {
   loader.load(
-    "models/tree.glb", // Tree model path
+    "/models/tree.glb",
     (gltf) => {
       const treeModel = gltf.scene;
 
@@ -651,7 +609,7 @@ treeData.forEach((tree) => {
 
 // Load another house model to be placed in front of the existing houses
 loader.load(
-  "models/house1.glb",
+  "/models/house1.glb",
   function (gltf) {
     const house1Model = gltf.scene;
 
@@ -680,7 +638,7 @@ loader.load(
 
 // Load another house model to be placed in front of the existing houses
 loader.load(
-  "models/house2.glb",
+  "/models/house2.glb",
   function (gltf) {
     const house2Model = gltf.scene;
 
@@ -708,7 +666,7 @@ loader.load(
 );
 
 loader.load(
-  "models/house3.glb",
+  "/models/house3.glb",
   function (gltf) {
     const house3Model = gltf.scene;
 
@@ -736,7 +694,7 @@ loader.load(
 );
 
 loader.load(
-  "models/house5.glb",
+  "/models/house5.glb",
   function (gltf) {
     const house3Model = gltf.scene;
 
@@ -764,7 +722,7 @@ loader.load(
 );
 
 loader.load(
-  "models/lunapark.glb",
+  "/models/lunapark.glb",
   function (gltf) {
     const lunapark = gltf.scene;
 
@@ -795,7 +753,7 @@ loader.load(
 );
 
 loader.load(
-  "models/football_field.glb",
+  "/models/football_field.glb",
   function (gltf) {
     const football_field = gltf.scene;
 
@@ -825,7 +783,7 @@ loader.load(
   }
 );
 loader.load(
-  "models/player1.glb",
+  "/models/player1.glb",
   function (gltf) {
     const player1 = gltf.scene;
 
@@ -838,7 +796,6 @@ loader.load(
 
     player1.rotation.set(0, 2 * Math.PI, 0);
 
-    // Enable shadow casting
     player1.traverse(function (node) {
       if (node.isMesh) {
         node.castShadow = true;
@@ -856,20 +813,17 @@ loader.load(
 );
 
 loader.load(
-  "models/player2.glb",
+  "/models/player2.glb",
   function (gltf) {
     const player2 = gltf.scene;
 
-    // Compute bounding box for proper placement
     const boundingBox = new THREE.Box3().setFromObject(player2);
 
-    // Adjust scale and position
     player2.scale.set(0.1, 0.1, 0.1);
-    player2.position.set(10, 3, -120); // Ensure it rests on the plane
+    player2.position.set(10, 3, -120);
 
     player2.rotation.set(0, 2 * Math.PI, 0);
 
-    // Enable shadow casting
     player2.traverse(function (node) {
       if (node.isMesh) {
         node.castShadow = true;
@@ -886,17 +840,14 @@ loader.load(
   }
 );
 
-// Load the walking person model
 loader.load(
-  "models/person.glb", // Replace with the actual path to your person model
+  "/models/person.glb",
   function (gltf) {
     const person = gltf.scene;
 
-    // Set initial scale and position
-    person.scale.set(0.1, 0.1, 0.1); // Adjust based on model size
-    person.position.set(50, 0, 50); // Start position on the road or sidewalk
+    person.scale.set(0.1, 0.1, 0.1);
+    person.position.set(50, 0, 50);
 
-    // Enable shadow casting
     person.traverse(function (node) {
       if (node.isMesh) {
         node.castShadow = true;
